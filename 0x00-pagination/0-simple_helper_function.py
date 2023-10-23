@@ -2,6 +2,7 @@
 """ Simple helper function """
 from typing import Tuple
 
+
 def index_range(page: int, page_size: int) -> Tuple:
     """
         index_range - the function return a tuple of size two
