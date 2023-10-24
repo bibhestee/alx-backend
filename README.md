@@ -1,5 +1,8 @@
 # ALX BACKEND
 
-Alx Backend Projects Home
+Backend concepts and logics
 
 ## PROJECTS
+
+- [0x00-Pagination](alx-backend/0x00-pagination)
+
