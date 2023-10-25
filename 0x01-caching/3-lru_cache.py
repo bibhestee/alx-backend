@@ -7,26 +7,6 @@ from base_caching import BaseCaching
 from datetime import datetime
 
 
-def lru(obj):
-    """ get the least recently used item """
-    # get the key of the least used items
-    least_used = [key for key in obj.keys()]
-    # initial least used key
-    lru_key = least_used[0]
-    lru_updated_at = obj[least_used[0]]
-    # check for the least used item using the time
-    for i in range(1, 4):
-        key = least_used[i]
-        updated_at = obj[key]
-        # if the time the prev obj is accessed is
-        # greater than when the next item is accessed
-        # then the next item is the lru
-        if lru_updated_at > updated_at:
-            lru_key = key
-            lru_updated_at = updated_at
-    return lru_key
-
-
 class LRUCache(BaseCaching):
     """
         LRUCache defines:
@@ -37,7 +17,7 @@ class LRUCache(BaseCaching):
             put: add an item in the cache
             get: get and item by key from the cache
     """
-    _lru_stack = {}
+    _lru_stack = []
 
     def __init__(self):
         """ Initiliaze
@@ -56,23 +36,22 @@ class LRUCache(BaseCaching):
         if key and item:
             if len(self.cache_data) >= self.MAX_ITEMS:
                 if key in self._lru_stack:
+                    # move the updated item to the front
                     self.cache_data[key] = item
-                    self._lru_stack[key] = datetime.now()
+                    self._lru_stack.remove(key)
+                    self._lru_stack.append(key)
                 else:
-                    lru_key = lru(self._lru_stack)
-                    # delete the discarded item from cache
-                    # and lru stack
+                    # remove the least recently used item
+                    lru_key = self._lru_stack.pop(0)
                     del self.cache_data[lru_key]
-                    del self._lru_stack[lru_key]
-                    # update the cache and lru stack with the
-                    # new item
+                    # add the new item to the cache and lru stack
                     self.cache_data[key] = item
-                    self._lru_stack[key] = datetime.now()
+                    self._lru_stack.append(key)
                     # print the discarded item
                     print('DISCARD: {}'.format(lru_key))
             else:
                 self.cache_data[key] = item
-                self._lru_stack[key] = datetime.now()
+                self._lru_stack.append(key)
 
     def get(self, key):
         """
@@ -83,6 +62,8 @@ class LRUCache(BaseCaching):
                 value of the item
         """
         if key and key in self.cache_data:
-            self._lru_stack[key] = datetime.now()
+            # move the accessed item to the front
+            self._lru_stack.remove(key)
+            self._lru_stack.append(key)
             return self.cache_data.get(key)
         return None
