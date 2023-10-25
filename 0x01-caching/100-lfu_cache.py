@@ -5,6 +5,7 @@
 
 from base_caching import BaseCaching
 
+
 def lfu(obj):
     """ get the least frequently used item """
     # get the ranks of the items based on usage
@@ -14,7 +15,7 @@ def lfu(obj):
     # get the least frequently used items or item
     lfu_items = [key for key in obj.keys() if obj[key] == least_rank]
     # return an item or notify the amount of lfu item
-    return lfu_items[0] if len(lfu_items) >= 2 else len(lfu_items)
+    return lfu_items if len(lfu_items) == 1 else lfu_items[0]
 
 
 class LFUCache(BaseCaching):
@@ -57,8 +58,9 @@ class LFUCache(BaseCaching):
                     # remove the least frequently used item
                     lfu_item = lfu(self._lfu_stack)
                     # if the lfu item is more than one use lru
-                    if type(lfu_item) == int:
-                        discard_item = self._lru_stack.pop(0)
+                    if len(lfu_item) == 1:
+                        self._lru_stack.remove(lfu_item[0])
+                        discard_item = str(lfu_item[0])
                     else:
                         discard_item = lfu_item
                         self._lru_stack.remove(discard_item)
