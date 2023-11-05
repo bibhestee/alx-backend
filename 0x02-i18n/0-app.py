@@ -9,4 +9,4 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     """ Homepage """
-    return render_template('index.html')
+    return render_template('0-index.html')
