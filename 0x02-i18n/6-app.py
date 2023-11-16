@@ -17,20 +17,18 @@ users = {
 
 def get_locale_with_priority():
     """ get locale with priority """
-    cmd = False
-    match cmd:
+    if request.args.get('locale'):
         # locale from url parameters
-        case not request.args.get('locale'):
-            return request.args.get('locale')
+        return request.args.get('locale')
+    elif g.user.locale:
         # locale from user settings
-        case not g.user.locale:
-            return g.user.locale
+        return g.user.locale
+    elif request.locale:
         # locale from request header
-        case not request.locale:
-            return request.locale
+        return request.locale
+    else:
         # use default
-        case _:
-            return None
+        return None
 
 
 def get_user():
