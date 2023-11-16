@@ -15,16 +15,19 @@ users = {
 }
 
 
-def get_user(login_as: str) -> dict:
+def get_user():
     """ get user """
     users = {1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
              2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
              3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
              4: {"name": "Teletubby", "locale": None,
                  "timezone": "Europe/London"}, }
-    if login_as:
-        return users.get(int(login_as))
-    return None
+    # get user id
+    try:
+        id = int(request.args.get('login_as'))
+        return users.get(id, None)
+    except Exception:
+        return None
 
 
 class Config:
@@ -44,8 +47,7 @@ babel = Babel(app)
 @app.before_request
 def before_request():
     """ before request """
-    id = request.args.get('login_as')
-    g.user = get_user(id)
+    g.user = get_user()
 
 
 @babel.localeselector
@@ -60,4 +62,4 @@ def get_locale():
 @app.route('/')
 def home():
     """ Homepage """
-    return render_template('5-index.html', user=g.user)
+    return render_template('5-index.html')
