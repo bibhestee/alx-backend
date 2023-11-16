@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 """
 Python flask web application module
 """
 
 from flask import Flask, render_template
+
 
 app = Flask(__name__)
 
