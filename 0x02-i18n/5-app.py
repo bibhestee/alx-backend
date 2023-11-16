@@ -41,6 +41,13 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
+@app.before_request
+def before_request():
+    """ before request """
+    id = request.args.get('login_as')
+    g.user = get_user(id)
+
+
 @babel.localeselector
 def get_locale():
     """ get locale """
@@ -50,18 +57,7 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-@app.before_request
-def before_request():
-    """ before request """
-    id = request.args.get('login_as')
-    g.user = get_user(id)
-
-
 @app.route('/')
 def home():
     """ Homepage """
     return render_template('5-index.html', user=g.user)
-
-
-if __name__ == "__main__":
-    app.run('127.0.0.1', 5000)
