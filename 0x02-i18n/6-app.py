@@ -21,17 +21,17 @@ def get_locale_with_priority():
         # locale from url parameters
         a_locale = request.args.get('locale')
         if a_locale in app.config['LANGUAGES']:
-            return request.args.get('locale')
+            return a_locale
     elif g.user.locale:
         # locale from user settings
         g_locale = g.user.locale
         if g_locale in app.config['LANGUAGES']:
-            return g.user.locale
+            return g_locale
     elif request.headers.get('locale'):
         # locale from request header
-        l = request.headers.get('locale')
-        if l in app.config['LANGUAGES']:
-            return request.locale
+        h_locale = request.headers.get('locale')
+        if h_locale in app.config['LANGUAGES']:
+            return h_locale
     return None
 
 
