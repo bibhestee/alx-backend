@@ -3,9 +3,9 @@
 Python flask web application module
 """
 
-from flask import Flask, render_template, request, g, pytz
+from flask import Flask, render_template, request, g
 from flask_babel import Babel
-
+import pytz
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
