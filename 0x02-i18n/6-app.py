@@ -15,26 +15,6 @@ users = {
 }
 
 
-def get_locale_with_priority():
-    """ get locale with priority """
-    if request.args.get('locale'):
-        # locale from url parameters
-        a_locale = request.args.get('locale')
-        if a_locale in app.config['LANGUAGES']:
-            return a_locale
-    elif g.user.locale:
-        # locale from user settings
-        g_locale = g.user.locale
-        if g_locale in app.config['LANGUAGES']:
-            return g_locale
-    elif request.headers.get('locale'):
-        # locale from request header
-        h_locale = request.headers.get('locale')
-        if h_locale in app.config['LANGUAGES']:
-            return h_locale
-    return None
-
-
 def get_user():
     """ get user """
     users = {1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -73,9 +53,21 @@ def before_request():
 @babel.localeselector
 def get_locale():
     """ get locale """
-    locale = get_locale_with_priority()
-    if locale:
-        return locale
+    if request.args.get('locale'):
+        # locale from url parameters
+        a_locale = request.args.get('locale')
+        if a_locale in app.config['LANGUAGES']:
+            return a_locale
+    elif g.user.locale:
+        # locale from user settings
+        g_locale = g.user.locale
+        if g_locale in app.config['LANGUAGES']:
+            return g_locale
+    elif request.headers.get('locale'):
+        # locale from request header
+        h_locale = request.headers.get('locale')
+        if h_locale in app.config['LANGUAGES']:
+            return h_locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
