@@ -19,16 +19,20 @@ def get_locale_with_priority():
     """ get locale with priority """
     if request.args.get('locale'):
         # locale from url parameters
-        return request.args.get('locale')
+        a_locale = request.args.get('locale')
+        if a_locale in app.config['LANGUAGES']:
+            return request.args.get('locale')
     elif g.user.locale:
         # locale from user settings
-        return g.user.locale
-    elif request.locale:
+        g_locale = g.user.locale
+        if g_locale in app.config['LANGUAGES']:
+            return g.user.locale
+    elif request.headers.get('locale'):
         # locale from request header
-        return request.locale
-    else:
-        # use default
-        return None
+        l = request.headers.get('locale')
+        if l in app.config['LANGUAGES']:
+            return request.locale
+    return None
 
 
 def get_user():
@@ -78,4 +82,4 @@ def get_locale():
 @app.route('/')
 def home():
     """ Homepage """
-    return render_template('5-index.html')
+    return render_template('6-index.html')
