@@ -58,9 +58,9 @@ def get_locale():
         a_locale = request.args.get('locale')
         if a_locale in app.config['LANGUAGES']:
             return a_locale
-    elif g.user.locale:
+    elif g.user.get('locale'):
         # locale from user settings
-        g_locale = g.user.locale
+        g_locale = g.user.get('locale')
         if g_locale in app.config['LANGUAGES']:
             return g_locale
     elif request.headers.get('locale'):
@@ -75,3 +75,7 @@ def get_locale():
 def home():
     """ Homepage """
     return render_template('6-index.html')
+
+
+if __name__ == "__main__":
+    app.run()
